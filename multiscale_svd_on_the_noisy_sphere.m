@@ -9,8 +9,7 @@ D = 100;         % ambiant dimension
 n = 1000 ;       % nb of samples
 sigma = 0.01;    % noise std (var = std ^ 2)
 y = k+5;         % nb of eigenvalues displayed in the plot
-radius = 0:0.04:3     ; % r to perform multiscale SVD
-
+radius = 0:0.5:3     ; % r to perform multiscale SVD
 
 %generating corrupted data (noisy sphere)
 noisy_data = generate_sphere(k,D,n,sigma);
@@ -27,6 +26,6 @@ Eeigenval = Eeigenval/sqrt(n); %rescale
 disp('Plotting')
 figure
 for i = 1:y
-    plot(radius,Eeigenval(i,:))
+    plot(radius.*radius,Eeigenval(i,:))
     hold on
 end
