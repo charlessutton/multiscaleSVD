@@ -21,7 +21,7 @@ for r = radius
     Eeigenval = [Eeigenval, local_svd(noisy_data,r)]; %matrix where each colums is the sorted listed of Eeigenval for a given radius
 end
 
-Eeigenval = Eeigenval/sqrt(n); %rescale to fit with the article where they use the matrix X * 1 / sqrt(n)
+Eeigenval = Eeigenval/sqrt(n); %rescale, in the article they use (1/sqrt(n)
 
 disp('Plotting')
 figure
