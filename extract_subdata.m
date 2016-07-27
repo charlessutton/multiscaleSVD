@@ -1,6 +1,7 @@
 function [subdata] = extract_subdata(point,data,r)
 %extract the point in the data set that are in B(point,r)
 % return the subdataset w
+%TODO: we can do it more efficiently
 [n, D] = size(data);
 subdata = [];
 for i = 1:n 

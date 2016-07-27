@@ -8,7 +8,7 @@ k = 9;          %intrinsic dimension
 D = 100;         % ambiant dimension
 n = 1000 ;       % nb of samples
 sigma = 0.01;    % noise std (var = std ^ 2)
-y = D/2;         % nb of eigenvalues displayed in the plot
+y = k + k*(k+1)/2 + 1 ; % nb of eigenvalues to be sure to have intrinsic + curvatures + noise effects on the same plot see section 3.3 of the article
 radius = 0:0.5:3     ; % r to perform multiscale SVD
 
 %generating corrupted data (noisy sphere)
@@ -18,10 +18,10 @@ Eeigenval = [];
 
 disp('Multiscale in progress ...')
 for r = radius
-    Eeigenval = [Eeigenval, local_svd(noisy_data,r)]; %matrix where each colums is the sorted listed of Eeigenval for a given radius
+    Eeigenval = [Eeigenval, local_svd(noisy_data,r)]; %matrix where we concatenate column by column the sorted listed of Eeigenval for a given radius
 end
 
-Eeigenval = Eeigenval/sqrt(n); %rescale, in the article they use (1/sqrt(n)
+Eeigenval = Eeigenval/sqrt(n); %rescale to fit with the article where they use the matrix X * 1 / sqrt(n)
 
 disp('Plotting')
 figure
