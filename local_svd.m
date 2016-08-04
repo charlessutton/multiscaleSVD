@@ -7,6 +7,7 @@ max_rank = min([n,D]);
 Eeigval = zeros(max_rank,1); %column vector
 for i = 1:n 
     subdata = extract_subdata(data(i,:),data,r);
+    subdata = bsxfun(@minus,subdata,mean(subdata,1));
     local_eigval = svd(subdata);
     Eeigval(1:size(local_eigval,1),1) = Eeigval(1:size(local_eigval,1),1) + local_eigval; %column vector %sum of eigvals
 end
