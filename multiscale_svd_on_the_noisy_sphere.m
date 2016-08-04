@@ -3,13 +3,13 @@
 %dimensionality of data sets" Maggioni and al. 
 
 %% Initialization
-rng(12345)
+rng(555)
 k = 9;          %intrinsic dimension
 D = 100;         % ambiant dimension
-n = 1000 ;       % nb of samples
-sigma = 0.01;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
+n = 1500 ;       % nb of samples
+sigma = 0.1;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
 y = k + k*(k+1)/2 + 1 ; % nb of eigenvalues to be sure to have intrinsic + curvatures + noise effects on the same plot see section 3.3 of the article
-it = 20;        %number of scales tested (nb of iterations)
+it = 50;        %number of scales tested (nb of iterations)
 %% generating corrupted data (noisy sphere)
 noisy_data = generate_sphere(k,D,n,sigma);
 
