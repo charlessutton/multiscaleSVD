@@ -1,16 +1,21 @@
-function [ norm ] = generate_pulse_1D( n, mu, n_sigma )
-%This function generates a 1D bell curve
-%   n - number of sampels
-%   mu - mean
-%   n_sigma - var of the noise %use 0.1
+function [ data ] = generate_pulse_1D( n, D, pulse_sigma, noise_sigma )
+%This function generates a dataset compossed of n 1D pulses, each sampled
+%on D points in the range [0,1] and with random mean
+%   n - number of pulses to generate
+%   D - num of sample points in the range [0,1]
+%   pulse_sigme - the std parameter ginven to the normal pdf function
+%   noise_sigma - var of the noise
 
-sigma = sqrt(0.02);
-x = linspace(0,1,n);
-norm = normpdf(x, mu, sigma);
-%norm = uniform_quantizer(norm, n);
-if sigma > 0
-    norm = norm + n_sigma*randn(1, length(x));
+x = linspace(0,1,D);
+data = zeros(n,D);
+mu = rand(n,1);    %random mean values in the range [0,1] for the curve balls genetated
+for i=1:n
+    data(i,:) = normpdf(x, mu(i), pulse_sigma);
 end
-%plot(x, norm);
+
+if noise_sigma > 0
+    data = data + noise_sigma*randn(n, D);
+end
+
 end
 
