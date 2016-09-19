@@ -3,6 +3,9 @@ clear all
 % This file runs all examples of the presentation / report and creates corresponding figures 
 % Execute 'clear all' before running the script, otherwise it will re-run with any existing options without prompting the user.
 
+%TO DO :
+% fix estimate_dim
+
 % list of examples
 examples   = { '9-d sphere without noise', ...
     '9-d sphere with little noise', ...
@@ -43,7 +46,6 @@ switch example_id
         data_options = struct('type','sphere','n',1000,'D',100,'k',9,'sigma_noise',0.1,'seed',555);
     case 3
         data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',1,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
-        
     case 4
         data_options = struct('type','gaussian_pulse','n',500,'D',100,'k',3,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
     case 5
@@ -109,11 +111,15 @@ disp('done')
 %%  Plotting results
 disp('Plotting')
 y = data_options.k + 5;
-figure
+figure;
 for i = 1:y
     plot([0,radius'],[0,Eeigenval(i,:)])
     hold on
 end
+title(examples(example_id));
+xlabel('radius') % x-axis label
+ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'latex') % y-axis label
+
 %% Estimated intrinsic dimension
 
 estimation = estimate_dim(Eeigenval);
