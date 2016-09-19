@@ -5,9 +5,9 @@ rng(55555)
 k = 5;          %intrinsic dimension
 D = 1000;        % nr of sample points for each curve ball 
 n = 500;       % nb of samples
-pulse_width = 0.02;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
-noise_sigma = 0.001; 
-y = 20 ; % nb of eigenvalues to be sure to have intrinsic + curvatures + noise effects on the same plot see section 3.3 of the article
+pulse_width = 0.1;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
+noise_sigma = 0.1; 
+y = 30 ; % nb of eigenvalues to be sure to have intrinsic + curvatures + noise effects on the same plot see section 3.3 of the article
 it = 15;        %number of scales tested (nb of iterations)
 I = linspace(0,1,D);
 r_prop = 0.90; % choose a value in [0.6,0.95] regarding the data 

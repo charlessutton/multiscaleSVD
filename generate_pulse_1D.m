@@ -14,7 +14,7 @@ for i=1:n
 end
 
 if noise_sigma > 0
-    data = data + noise_sigma*randn(n, D);
+    data = data + noise_sigma*abs(randn(n, D));
 end
 
 end

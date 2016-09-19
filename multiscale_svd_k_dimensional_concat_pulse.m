@@ -2,7 +2,7 @@
 
 %% Initialization
 rng(55555)
-k = 5;          %intrinsic dimension
+k = 3;          %intrinsic dimension
 D = 1000;        % nr of sample points for each curve ball 
 n = 500;       % nb of samples
 pulse_sigma = 0.1;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
@@ -14,7 +14,9 @@ I = linspace(0,k,D);
 r_prop = 1; % choose a value in [0.6,0.95] regarding the data 
 %% generating uncorrupted data set
 % noisy_data = generate_pulse_kD(k, n, D, pulse_sigma , noise_sigma);
+%noisy_data = generate_sphere(k,D,n,noise_sigma);
 noisy_data = generate_concat_pulse_1D(k, n, D, pulse_sigma, noise_sigma );
+
 %% assessing well generation
 figure;
 for i = 1:5 
