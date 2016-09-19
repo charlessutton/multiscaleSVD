@@ -1,0 +1,86 @@
+%This script illustrates the multiscale svd technique on the noisy sphere
+%just as it is described in the section 2.1 of the paper "multiscale estimation of intrinsic
+%dimensionality of data sets" Maggioni and al. 
+
+%% Initialization
+rng(555)
+k = 9;          %intrinsic dimension
+D = 1000;         % ambiant dimension
+n = 100 ;       % nb of samples
+sigma = 0.1;    % var of the noise( recall : var = std ^ 2 and std = 0.1 in the paper)
+y = k + k*(k+1)/2 + 1 ; % nb of eigenvalues to be sure to have intrinsic + curvatures + noise effects on the same plot see section 3.3 of the article
+it = 50;        %number of scales tested (nb of iterations)
+r_prop = 1; % choose a value in [0.6,0.95] regarding the data 
+it_end = 5;
+%% generating corrupted data (noisy sphere)
+%noisy_data = generate_sphere(k,D,n,sigma);
+XOpts = struct('NumberOfPoints',1000,'Dim',9,'EmbedDim',100,'NoiseType','Gaussian','NoiseParam',0.1);
+noisy_data = GenerateDataSets( 'D-Sphere', XOpts);
+
+%% efficiently choosing the set of radius
+dm = distance_matrix(noisy_data); %Compute the distance matrix
+%all_radius = 0:0.01:3; % first select a wide range of radius
+r_min = max(min(dm));
+r_max = max(max(dm));
+pas = (r_max-r_min)/1000;
+all_radius = r_min:pas:r_max; % first select a wide range of radius
+steps = linspace(3,n,it);
+
+avg_vector = zeros(1,length(all_radius));
+for i = 1:length(all_radius)
+    avg_vector(i) = avg_nb_per_ball(dm,all_radius(i));
+end
+%% see the distribution of avg number of neighbors
+figure;
+plot(1:length(avg_vector),avg_vector)
+%% choosing bounds for intelligent radiuses
+avg_nb_min = 3; % minimum neighbors accepted
+avg_nb_max = r_prop*max(avg_vector);
+steps = linspace(3,avg_nb_max,it);
+steps = [steps(1:length(steps)-2),linspace(steps(length(steps)-1),steps(length(steps)),it_end)];
+
+radius = zeros(length(steps),1); %efficient selection of radius
+for i=1:length(steps)
+   threshold = steps(i);   
+   ix = find(avg_vector>threshold,1);
+   if isempty(ix)
+        radius(i) = all_radius(length(all_radius));    
+   else 
+        radius(i) = all_radius(ix);
+   end
+   
+end
+
+radius = radius(1:length(radius)-1);
+%% Computing nearest neighbors
+[sd_m, nn_m] = NN_matrices(dm);
+%% processing multiscale svd
+disp('Multiscale in progress ...')
+
+Eeigenval = zeros(min(n,D),length(radius));
+for i = 1:length(radius)
+    r = radius(i);
+    for j = 1:n
+        nb_n = find(sd_m(j,:) > r ,1); %find the number of neighbors
+        n_idx = nn_m(j,1:nb_n); %get indices of these neighbors
+        ball_z_r = noisy_data(n_idx,:); 
+        ball_z_r = bsxfun(@minus,ball_z_r,mean(ball_z_r,1)); % we center the data
+        local_eigval = svd(ball_z_r');
+        Eeigenval(1:size(local_eigval,1),i) = Eeigenval(1:size(local_eigval,1),i) + local_eigval; %column vector %sum of eigvals
+    end
+    Eeigenval(:,i) = Eeigenval(:,i) / n;  
+    %old method
+    %Eeigenval(:,i) = local_svd(noisy_data,radius(i)); %matrix where we concatenate column by column the sorted listed of Eeigenval for a given radius
+end
+
+%Eeigenval(:,length(radius)+1) = svd(noisy_data);
+Eeigenval = Eeigenval./sqrt(n); %rescale to fit with the article where they use the matrix X * 1 / sqrt(n)
+disp('done')
+%%  Plotting results
+
+disp('Plotting')
+figure
+for i = 1:y
+    plot([0,radius'],[0,Eeigenval(i,:)])
+    hold on
+end
