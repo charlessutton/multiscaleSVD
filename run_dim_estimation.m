@@ -4,7 +4,8 @@ clear all
 % Execute 'clear all' before running the script, otherwise it will re-run with any existing options without prompting the user.
 
 %TO DO :
-% fix estimate_dim
+% add timing information
+% add examples
 
 % list of examples
 examples   = { '9-d sphere without noise', ...
@@ -122,10 +123,10 @@ ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'lat
 
 %% Estimated intrinsic dimension
 
+
 estimation = estimate_dim(Eeigenval);
 fprintf('\n estimated dimension : %d', estimation);
 fprintf('\n true dimension : %d \n ', data_options.k);
-
 
 
 
