@@ -12,6 +12,6 @@ function [ k ] = estimate_dim(Eeigenval)
     
     % we detect the first "gap peak" by tresholding
     % it estimates the intrinsic dimension 
-    k = find(normalized > 0.1, 1);
-    
+    threshold = 0.1;
+    k = find(normalized > threshold , 1);
 end
