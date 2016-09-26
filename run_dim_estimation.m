@@ -128,8 +128,6 @@ xlabel('radius') % x-axis label
 ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'latex') % y-axis label
 
 %% Estimated intrinsic dimension
-
-
 estimation = estimate_dim(Eeigenval);
 fprintf('\n estimated dimension : %d', estimation);
 fprintf('\n true dimension : %d \n ', data_options.k);
