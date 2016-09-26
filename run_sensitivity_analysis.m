@@ -146,7 +146,12 @@ plot_options.title = sprintf(formatSpec, data_type{data_type_id}, plot_options.x
 
 figure;
 %semilogx(plot_options.x,estimations);
-plot(plot_options.x,estimations);
+plot(plot_options.x,estimations)
+set(gca,'XTick',plot_options.x)
+set(gca,'YTick',data_options.k - 5: data_options.k + 5)
+ylim([data_options.k - 5 data_options.k + 5])
 title(plot_options.title);
 xlabel(plot_options.xlabel) % x-axis label
 ylabel('estimation') % y-axis label
+
+

@@ -10,10 +10,12 @@ clear all
 % list of examples
 examples   = { '9-d sphere without noise', ...
     '9-d sphere with little noise', ...
-    '1-D gaussian pulse', ...
+    '1-D gaussian pulse without noise', ...
+    '1-D gaussian pulse with noise', ...
     '3 concatenated 1D gaussian pulse', ...
     '3 concatenated 1D gaussian pulse, noisy case', ...
     '5 concatenated 1D gaussian pulse', ...
+    '5 concatenated 1D gaussian pulse, noisy case', ...
     };
 
 fprintf('\n\n Select example to run:\n');
@@ -48,11 +50,15 @@ switch example_id
     case 3
         data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',1,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
     case 4
-        data_options = struct('type','gaussian_pulse','n',500,'D',100,'k',3,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',1,'sigma_noise',0.1,'sigma_pulse',0.1,'seed',555);
     case 5
-        data_options = struct('type','gaussian_pulse','n',500,'D',100,'k',3,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',3,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
     case 6
-        data_options = struct('type','gaussian_pulse','n',500,'D',100,'k',5,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',3,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
+    case 7
+        data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+    case 8
+        data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',5,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
 
 end
 noisy_data = generate_data(data_options);
