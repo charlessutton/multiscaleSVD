@@ -14,4 +14,7 @@ function [ k ] = estimate_dim(Eeigenval)
     % it estimates the intrinsic dimension 
     threshold = 0.1;
     k = find(normalized > threshold , 1);
+    if isempty(k)
+        disp('no peak detected')
+    end
 end
