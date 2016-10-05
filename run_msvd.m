@@ -16,6 +16,9 @@ examples   = { '9-d sphere without noise', ...
     '3 concatenated 1D gaussian pulse, noisy case', ...
     '5 concatenated 1D gaussian pulse', ...
     '5 concatenated 1D gaussian pulse, noisy case', ...
+    '1D stair pulse without noise', ...
+    'sum of 5 stair pulses without noise',...
+    'Concatenation of 5 stair pulses without noise'
     };
 
 fprintf('\n\n Select example to run:\n');
@@ -59,7 +62,12 @@ switch example_id
         data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
     case 8
         data_options = struct('type','gaussian_pulse','n',500,'D',1000,'k',5,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
-
+    case 9
+        data_options = struct('type','stair_sum','n',500,'D',1000,'k',1,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
+    case 10
+        data_options = struct('type','stair_sum','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.02,'seed',555);
+    case 11
+        data_options = struct('type','stair_concat','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
 end
 noisy_data = generate_data(data_options);
 
@@ -131,6 +139,3 @@ ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'lat
 estimation = estimate_dim(Eeigenval);
 fprintf('\n estimated dimension : %d', estimation);
 fprintf('\n true dimension : %d \n ', data_options.k);
-
-
-
