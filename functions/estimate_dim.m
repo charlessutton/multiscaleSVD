@@ -9,12 +9,16 @@ function [ k ] = estimate_dim(Eeigenval)
     diff_matrix = diff(Eeigenval,1);
     somme =  sum(diff_matrix,2);
     normalized = abs(somme)/sum(abs(somme)) ;
-    
+
     % we detect the first "gap peak" by tresholding
     % it estimates the intrinsic dimension 
-    threshold = 0.1;
+    threshold = normalized(1);    
     k = find(normalized > threshold , 1);
     if isempty(k)
         disp('no peak detected')
     end
+    
+    %figure;
+    %plot(normalized)
+    %title('estimate dim')
 end

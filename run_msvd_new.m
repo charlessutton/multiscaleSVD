@@ -17,9 +17,14 @@ examples   = { '9-d sphere without noise', ...
     '5 concatenated 1D gaussian pulse', ...
     '5 concatenated 1D gaussian pulse, noisy case', ...
     '5 summed 1D gaussian thin pulse', ...
+    '3 summed 1D gaussian thick pulse', ...
     '5 summed 1D gaussian thick pulse', ...
-    '1D stair pulse without noise', ...
+    '7 summed 1D gaussian thick pulse', ...
+    '9 summed 1D gaussian thick pulse', ...
+    '1D stair pulse', ...
+    '3 summed 1D stair pulses',...
     '5 summed 1D stair pulses', ...
+    '7 summed 1D stair pulses',...
     '5 concatenated 1D stair pulses'
     };
 
@@ -46,16 +51,16 @@ while true,
 end;
 
 %% Generate data of the chosen example
-algo_options = struct('it',15,'it_end',5,'sqrt_subsampling',3);
+algo_options = struct('it',15,'it_end',5,'subsample',true,'sqrt_subsampling',10);
 switch example_id
     case 1
         data_options = struct('type','sphere','n',1000,'D',100,'k',9,'sigma_noise',0,'seed',555);
     case 2
-        data_options = struct('type','sphere','n',1000,'D',100,'k',9,'sigma_noise',0.1,'seed',555);
+        data_options = struct('type','sphere','n',1000,'D',100,'k',9,'sigma_noise',0.01,'seed',555);
     case 3
-        data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',1,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',1,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
     case 4
-        data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',1,'sigma_noise',0.1,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',1,'sigma_noise',0.1,'sigma_pulse',0.05,'seed',555);
     case 5
         data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',3,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
     case 6
@@ -65,14 +70,24 @@ switch example_id
     case 8
         data_options = struct('type','gaussian_pulse_concat','n',1000,'D',1000,'k',5,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
     case 9
-        data_options = struct('type','gaussian_pulse_sum','n',1000,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.01,'seed',555);
+        data_options = struct('type','gaussian_pulse_sum','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.01,'seed',555);
     case 10
-        data_options = struct('type','gaussian_pulse_sum','n',1000,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse_sum','n',500,'D',1000,'k',3,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
     case 11
-        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',1,'sigma_noise',0.01,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse_sum','n',500,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
     case 12
-        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.1,'seed',555);
+        data_options = struct('type','gaussian_pulse_sum','n',500,'D',1000,'k',7,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
     case 13
+        data_options = struct('type','gaussian_pulse_sum','n',500,'D',1000,'k',9,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
+    case 14
+        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',1,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
+    case 15
+        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',3,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);        
+    case 16
+        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
+    case 17
+        data_options = struct('type','stair_sum','n',1000,'D',1000,'k',7,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
+    case 18
         data_options = struct('type','stair_concat','n',1000,'D',1000,'k',5,'sigma_noise',0,'sigma_pulse',0.05,'seed',555);
 end
 noisy_data = generate_data(data_options);
@@ -88,7 +103,13 @@ avg_vector = zeros(1,length(all_radius));
 for i = 1:length(all_radius)
     avg_vector(i) = avg_nb_per_ball(dm,all_radius(i));
 end
+%% data insights
 
+% nb wrt radius
+figure;
+plot(all_radius,avg_vector)
+figure;
+plot(noisy_data(1,:))
 %% choosing bounds for intelligent radiuses
 avg_nb_min = 3; % minimum neighbors accepted
 avg_nb_max = max(avg_vector);
@@ -123,15 +144,26 @@ for i = 1:length(radius)
     r = radius(i);
     if r < r_max
         %case r is small enough to perform local svd
-        %for j = 1:data_options.n
-        subsample_idx = randsample(data_options.n, algo_options.sqrt_subsampling*round(sqrt(data_options.n)));
-        for j = subsample_idx' 
-            nb_n = find(sd_m(j,:) > r ,1); %find the number of neighbors
-            n_idx = nn_m(j,1:nb_n); %get indices of these neighbors
-            ball_z_r = noisy_data(n_idx,:); 
-            ball_z_r = bsxfun(@minus,ball_z_r,mean(ball_z_r,1)); % we center the data
-            local_eigval = svd(ball_z_r');
-            local_eigval_matrix(1:size(local_eigval,1),j) = local_eigval;
+
+       if  algo_options.subsample           
+            subsample_idx = randsample(data_options.n, algo_options.sqrt_subsampling*round(sqrt(data_options.n)));
+            for j = subsample_idx' 
+                nb_n = find(sd_m(j,:) > r ,1); %find the number of neighbors
+                n_idx = nn_m(j,1:nb_n); %get indices of these neighbors
+                ball_z_r = noisy_data(n_idx,:); 
+                ball_z_r = bsxfun(@minus,ball_z_r,mean(ball_z_r,1)); % we center the data
+                local_eigval = svd(ball_z_r');
+                local_eigval_matrix(1:size(local_eigval,1),j) = local_eigval;
+            end
+       else
+            for j = 1:data_options.n
+                nb_n = find(sd_m(j,:) > r ,1); %find the number of neighbors
+                n_idx = nn_m(j,1:nb_n); %get indices of these neighbors
+                ball_z_r = noisy_data(n_idx,:); 
+                ball_z_r = bsxfun(@minus,ball_z_r,mean(ball_z_r,1)); % we center the data
+                local_eigval = svd(ball_z_r');
+                local_eigval_matrix(1:size(local_eigval,1),j) = local_eigval;        
+            end    
         end
         for k = 1:min(data_options.n,data_options.D)
             sv_vec = local_eigval_matrix(k,:);            
@@ -180,3 +212,6 @@ ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'lat
 estimation = estimate_dim(Eeigenval);
 fprintf('\n estimated dimension : %d', estimation);
 fprintf('\n true dimension : %d \n ', data_options.k);
+%% Global SVD estimation
+eigenvalues = svd(noisy_data);
+find(eigenvalues<0.001,1)
