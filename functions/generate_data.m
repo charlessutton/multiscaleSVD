@@ -12,4 +12,6 @@ switch data_options.type
         data = generate_stair_pulse_concat_kD(data_options.k, data_options.n, data_options.D, data_options.sigma_pulse, data_options.sigma_noise);
     case 'stair_sum'
         data = generate_stair_pulse_kD(data_options.k, data_options.n, data_options.D, data_options.sigma_pulse, data_options.sigma_noise);
+    case 'triangle_sum'
+        data = generate_triangle_kD(data_options.k, data_options.n, data_options.D, data_options.sigma_pulse, data_options.sigma_noise);
 end
