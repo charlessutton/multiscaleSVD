@@ -1,16 +1,17 @@
 %% Parameters data
 clear all
+clc
 data_options = struct();
 data_options.type = 'triangle';
-data_options.noise_level = 0.05;
-data_options.k = 5;
-data_options.n = 1000;
-data_options.D = 100;
+data_options.noise_level = 0;
+data_options.k = 3;
+data_options.n = 1500;
+data_options.D = 200;
 data_options.gain = 'off';
 data_options.circular = 'on';
-data_options.width = 0.1;
+data_options.width = 0.02;
 %% Parameters algo
-algo_options = struct('it',8,'it_end',3,'it_start',10,'subsample',true,'sqrt_subsampling',10);
+algo_options = struct('it',8,'it_end',4,'it_start',10,'subsample',false,'sqrt_subsampling',10);
 %% Generate data
 noisy_data = generate_data(data_options);
 %% efficiently choosing the set of radius
@@ -60,7 +61,7 @@ nb_neighbors = 20;
 relevant_radius = all_radius(find(avg_vector > nb_neighbors, 1));
 fprintf('\n relevant radius : %d \n ', relevant_radius);
 %% some points
-for ii=1:1
+for ii=1:3
     figure;
     plot(noisy_data(ii,:))
     title( sprintf('%s pulses with dim %d ' , data_options.type, data_options.k));
@@ -102,11 +103,13 @@ for i = 1:length(radius)
         end
         for k = 1:min(data_options.n,data_options.D)
             sv_vec = local_eigval_matrix(k,:);
-            Eeigenval(k,i) = mean(sv_vec(sv_vec>0));
+            %Eeigenval(k,i) = mean(sv_vec(sv_vec>0)); %
+            Eeigenval(k,i) = mean(sv_vec);
             if isnan(Eeigenval(k,i))
                 Eeigenval(k,i)= 0;
             end
-            Stdeigenval(k,i) = std(sv_vec(sv_vec>0));
+            %Stdeigenval(k,i) = std(sv_vec(sv_vec>0));
+            Stdeigenval(k,i) = std(sv_vec);
             if isnan(Stdeigenval(k,i))
                 Stdeigenval(k,i) = 0;
             end
@@ -128,7 +131,7 @@ disp('done')
 
 %  Plotting results
 disp('Plotting')
-y = data_options.k + 20;
+y = min(data_options.n,data_options.D);
 figure;
 for i = 1:y
     plot([0,radius'],[0,Eeigenval(i,:)],'-b')
