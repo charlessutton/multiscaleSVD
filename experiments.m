@@ -2,14 +2,14 @@
 clear all
 clc
 data_options = struct();
-data_options.type = 'triangle';
+data_options.type = 'gaussian';
 data_options.noise_level = 0;
 data_options.k = 3;
-data_options.n = 1500;
+data_options.n = 1000;
 data_options.D = 200;
 data_options.gain = 'off';
-data_options.circular = 'on';
-data_options.width = 0.02;
+data_options.circular = 'off';
+data_options.width = 0.05;
 %% Parameters algo
 algo_options = struct('it',8,'it_end',4,'it_start',10,'subsample',false,'sqrt_subsampling',10);
 %% Generate data
@@ -61,9 +61,10 @@ nb_neighbors = 20;
 relevant_radius = all_radius(find(avg_vector > nb_neighbors, 1));
 fprintf('\n relevant radius : %d \n ', relevant_radius);
 %% some points
+I = linspace(0,1,data_options.D);
 for ii=1:3
     figure;
-    plot(noisy_data(ii,:))
+    plot(I, noisy_data(ii,:))
     title( sprintf('%s pulses with dim %d ' , data_options.type, data_options.k));
 end
 
