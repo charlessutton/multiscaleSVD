@@ -7,9 +7,9 @@ data_options = struct();
 data_options.type = 'gaussian';
 data_options.noise_level = 0;
 data_options.k = 3;
-data_options.n = 2000;
-data_options.D = 50;
-data_options.gain = 'on';
+data_options.n = 5000;
+data_options.D = 100;
+data_options.gain = 'off';
 data_options.circular = 'on';
 data_options.width = 0.05;
 
@@ -23,7 +23,7 @@ radius_options = struct('it',7,'it_end',2,'it_start',4);
 sub_options = struct('state',true,'nb',200);
 
 %% Plotting options
-plt_options = struct('sample',false,'avg',false,'msvd',true);
+plt_options = struct('sample',true,'avg',false,'msvd',true);
 
 %% Generating dataset of pulses 
 noisy_data = generate_data(data_options);
