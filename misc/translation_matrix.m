@@ -1,7 +1,8 @@
 % Tanslation matrices
 
-% fist section shows unitary property of such translation matric T
-% second section shows application of it
+% fist section shows unitary property of such translation matrix T
+% second section shows application of itx
+
 
 %% They are Unitary matrices
 
@@ -31,3 +32,7 @@ signal_translated = T_teta * signal';
 figure;
 plot(I,signal,I,signal_translated);
 legend('signal','translated');
+
+%% Covariance 
+
+% isequal(svd(signal),svd(signal_translated)) % faire avec plus de signaux
