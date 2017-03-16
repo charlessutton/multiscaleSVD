@@ -2,15 +2,18 @@
 clear all
 data_options = struct();
 data_options.type = 'gaussian';
-data_options.noise_level = 0.1;
+data_options.noise_level = 0.4;
 data_options.k = 3;
-data_options.n = 500;
+data_options.n = 50;
 data_options.D = 50;
 data_options.gain = 'off';
 data_options.circular = 'off';
-data_options.width = 0.1;
+data_options.width = 0.05;
 %% Generate data
 data = generate_data(data_options);
+figure;
+plot(data(1,:));
+title('signal sample');
 %% MUSIC built in
 % pmusic(data, data_options.k);
 %% getting singular values
