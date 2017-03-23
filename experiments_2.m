@@ -6,9 +6,9 @@ tic
 data_options = struct();
 data_options.type = 'gaussian';
 data_options.noise_level = 0;
-data_options.k = 3;
+data_options.k = 2;
 data_options.n = 5000;
-data_options.D = 100;
+data_options.D = 200;
 data_options.gain = 'off';
 data_options.circular = 'on';
 data_options.width = 0.05;
@@ -23,7 +23,7 @@ radius_options = struct('it',7,'it_end',2,'it_start',4);
 sub_options = struct('state',true,'nb',200);
 
 %% Plotting options
-plt_options = struct('sample',true,'avg',false,'msvd',true);
+plt_options = struct('sample',true,'avg',false,'msvd',true,'rmsvd',true);
 
 %% Generating dataset of pulses 
 noisy_data = generate_data(data_options);
@@ -115,7 +115,9 @@ end
 disp('Multiscale in progress ...')
 
 Eeigenval = zeros(min(data_options.n,data_options.D),length(radius));
+EReigenval = zeros(min(data_options.n,data_options.D),length(radius));
 Stdeigenval = zeros(min(data_options.n,data_options.D),length(radius));
+StdReigenval = zeros(min(data_options.n,data_options.D),length(radius));
 
 if sub_options.state
     [~,~,~,~,subsample_idx] = kmedoids(noisy_data, sub_options.nb); % kmedoids + subsample idx   
@@ -123,6 +125,7 @@ if sub_options.state
     for i = 1:length(radius)
 
         local_eigval_matrix = zeros(min(data_options.n,data_options.D),sub_options.nb);
+        local_relative_eigval_matrix = zeros(min(data_options.n,data_options.D),sub_options.nb);
         r = radius(i);
         if r < r_max %case r is small enough to perform local svd
 
@@ -134,6 +137,7 @@ if sub_options.state
                 ball_z_r = bsxfun(@minus,ball_z_r,mean(ball_z_r,1)); % we center the data
                 local_eigval = svd(ball_z_r');
                 local_eigval_matrix(1:size(local_eigval,1),j) = local_eigval;
+                local_relative_eigval_matrix(1:size(local_eigval,1),j) = local_eigval/local_eigval(1); % relative weights of eigvals
             end
             for l = 1:min(data_options.n,data_options.D)
                 sv_vec = local_eigval_matrix(l,:);
@@ -145,6 +149,16 @@ if sub_options.state
                 if isnan(Stdeigenval(l,i))
                     Stdeigenval(l,i) = 0;
                 end
+                
+                rsv_vec = local_relative_eigval_matrix(l,:);
+                EReigenval(l,i) = mean(rsv_vec);
+                if isnan(EReigenval(l,i))
+                    EReigenval(l,i)= 0;
+                end
+                StdReigenval(l,i) = std(rsv_vec);
+                if isnan(StdReigenval(l,i))
+                    StdReigenval(l,i) = 0;
+                end                
             end
         else
             %case global svd
@@ -152,6 +166,7 @@ if sub_options.state
             global_ball = bsxfun(@minus,global_ball,mean(global_ball,1)); % we center the data
             global_eigval = svd(global_ball);
             Eeigenval(1:size(global_eigval,1),i) = global_eigval;
+            EReigenval(1:size(global_eigval,1),i) = global_eigval/global_eigval(1);
         end
 
     end
@@ -159,6 +174,7 @@ if sub_options.state
     
     Eeigenval = Eeigenval./sqrt(sub_options.nb); %rescale to fit with the article where they use the matrix X * 1 / sqrt(n)
     Stdeigenval = Stdeigenval./sqrt(sub_options.nb);
+    
 else   
     for i = 1:length(radius)
 
@@ -228,4 +244,28 @@ if plt_options.msvd
     xlabel('radius') % x-axis label
     ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] $$', 'Interpreter', 'latex') % y-axis label
 end
+
+if plt_options.rmsvd
+    figure;
+    for i = 1:y
+        plot([0,radius],[0,EReigenval(i,:)],'-b')
+        hold on
+        plot([0,radius],[0,EReigenval(i,:)+StdReigenval(i,:)],':k')
+        hold on
+        plot([0,radius],[0,EReigenval(i,:)-StdReigenval(i,:)],':r')
+        hold on
+    end
+    ax = gca();
+    pmax = plot([r_max, r_max],ax.YLim, '-m');
+    hold on
+    rbest = plot([radius(lin_index), radius(lin_index)],ax.YLim, '-g');
+    hold on
+    scatter(radius,zeros(length(radius),1),'filled');
+    hold on
+    ylim([0, 1.1])
+    title( sprintf('Relative MSVD %s pulses with dim %d ' , data_options.type, data_options.k));
+    xlabel('radius') % x-axis label
+    ylabel('$$ frac{E_{z}\left[\sigma_{i}\left(z,r\right)\right]}{E_{z}\left[\sigma_{1}\left(z,r\right)\right]} $$', 'Interpreter', 'latex') % y-axis label
+end
+
 toc
