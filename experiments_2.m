@@ -5,9 +5,9 @@ clc
 tic
 data_options = struct();
 data_options.type = 'gaussian';
-data_options.noise_level = 0;
-data_options.k = 2;
-data_options.n = 5000;
+data_options.noise_level = 0.5;
+data_options.k = 4;
+data_options.n = 12000;
 data_options.D = 200;
 data_options.gain = 'off';
 data_options.circular = 'on';
