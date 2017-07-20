@@ -14,7 +14,7 @@ I = linspace(-1,1,data_options.D);
 if strcmpi(data_options.circular,'on')
     %case circular
     half_width = norminv(0.99,0,data_options.width); % disclaimer, in the gaussian case, half width is not witdh/2
-    half_width_sample = round(half_width * data_options.D);
+    half_width_sample = round(0.5*half_width * data_options.D);
     I_extended = linspace(-1 - half_width , 1 + half_width , data_options.D + 2*half_width_sample);
     data_extended = zeros(data_options.n, data_options.D + 2*half_width_sample);
     for i = 1:data_options.k
