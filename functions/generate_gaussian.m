@@ -2,23 +2,23 @@ function [ data ] = generate_gaussian(data_options)
 % this function generates a dataset of gaussian signals given the data_options 
 % parameters :
 %   n - size of the dataset
-%   D - num of sample points in the range [0,1]
+%   D - num of sample points in the range [-1,1]
 %   k - num of signals summed
 %   width - the std parameter given to the normalpdf function
 %   circular : 'on' means the interval is circular and so overlap
 %   gain : add rayleigh gain
 
 data = zeros(data_options.n,data_options.D);
-I = linspace(0,1,data_options.D);
+I = linspace(-1,1,data_options.D);
 
 if strcmpi(data_options.circular,'on')
     %case circular
     half_width = norminv(0.99,0,data_options.width); % disclaimer, in the gaussian case, half width is not witdh/2
-    half_width_sample = round( half_width * data_options.D);
-    I_extended = linspace(0 - half_width , 1 + half_width , data_options.D + 2*half_width_sample);
+    half_width_sample = round(half_width * data_options.D);
+    I_extended = linspace(-1 - half_width , 1 + half_width , data_options.D + 2*half_width_sample);
     data_extended = zeros(data_options.n, data_options.D + 2*half_width_sample);
     for i = 1:data_options.k
-        mu = rand(data_options.n,1);    %random mean values in the range [0,1] for the curve balls genetated
+        mu = 2*rand(data_options.n,1) - 1;    %random mean values in the range [0,1] for the curve balls genetated
         for j = 1:data_options.n
             if strcmpi(data_options.gain, 'on')
                 gain = raylrnd(sqrt(2/pi));
@@ -36,7 +36,7 @@ if strcmpi(data_options.circular,'on')
 else
     
     for i = 1:data_options.k
-        mu = rand(data_options.n,1);    %random mean values in the range [0,1] for the curve balls genetated
+        mu = 2*rand(data_options.n,1)-1;    %random mean values in the range [0,1] for the curve balls genetated
         for j = 1:data_options.n
             if strcmpi(data_options.gain, 'on')
                 gain = raylrnd(sqrt(2/pi));

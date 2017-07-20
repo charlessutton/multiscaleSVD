@@ -2,20 +2,20 @@ function [ data ] = generate_stair(data_options)
 % this function generates a dataset of stair signals given the data_options 
 % parameters :
 %   n - size of the dataset
-%   D - num of sample points in the range [0,1]
+%   D - num of sample points in the range [-1,1]
 %   k - num of stairs summed
 %   width - the half width of a stair
 %   circular : 'on' means the interval is circular and so overlap
 %   gain : 'on' means we add rayleigh gain
 
 data = zeros(data_options.n,data_options.D);
-I = linspace(0,1,data_options.D);
+I = linspace(-1,1,data_options.D);
 
 if strcmpi(data_options.circular,'on')
     %case circular
     half_width = data_options.width / 2 ;
     half_width_sample = round( half_width * data_options.D)+1; % convert number of sample points
-    I_extended = linspace(0 - half_width , 1 + half_width , data_options.D + 2*half_width_sample);
+    I_extended = linspace(-1 - half_width , 1 + half_width , data_options.D + 2*half_width_sample);
     data_extended = zeros(data_options.n, data_options.D + 2*half_width_sample);
     for i = 1:data_options.k
         for j = 1:data_options.n
@@ -24,7 +24,7 @@ if strcmpi(data_options.circular,'on')
             else 
                 gain = 1;
             end
-            start_point = (1+ 2*half_width) * rand - half_width; 
+            start_point = 2*rand - 1;
             start_point_idx = find(I_extended > start_point,1);
             end_point_idx = find(I_extended > start_point+data_options.width,1);
             data_extended(j,start_point_idx:end_point_idx) = data_extended(j,start_point_idx:end_point_idx) + gain;
@@ -45,7 +45,7 @@ else
                 gain = 1;
             end
             
-            start_point = (1-data_options.width) * rand ; 
+            start_point = (2-data_options.width)*rand - 1 ; 
             start_point_idx = find(I > start_point,1);
             end_point_idx = find(I>start_point+data_options.width,1);
             data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + gain;
