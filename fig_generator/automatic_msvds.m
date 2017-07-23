@@ -1,30 +1,31 @@
 % Generate msvd - kmsvd - krmsvd automately
 
-
 %% Parameters automation
+clear all
+clc
 
 foldername = '/Users/Code/Google Drive/thesis/figures/automatic/'; % mac
+foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\clean\\'; %windows
+expname = '';
 % cat(2,'a','b'); % concat deux strings
-k_params = 1:3;
+k_params = 1:5;
 
 for k_param = k_params
     %% Init
-    clear all
-    clc
+
     tic
     % This is my main script to perform experiments : selecting the type of pulses and get MSVD plots
     %% Parameters data
     
     data_options = struct();
-    data_options.type = 'gaussian';
+    data_options.type = 'triangle';
     data_options.noise_level = 0;
     data_options.k = k_param;
     data_options.n = 5000;
     data_options.D = 200;
     data_options.gain = 'off';
     data_options.circular = 'on';
-    data_options.width = 0.05;
-    
+    data_options.width = 0.1;
     data_options.neigh = 1000;
     data_options.mu = rand(1,data_options.k);
     
@@ -102,7 +103,7 @@ for k_param = k_params
     end
     
     filename = sprintf('%s_%d_avg_neigh' , data_options.type, data_options.k);
-    saveas(gcf, cat(2,foldername,filename), 'jpg');
+    saveas(gcf, cat(2,foldername,filename,expname), 'jpg');
     %% to get the approximate number of neighbors at the best scale
     avg_nb_neighbors = zeros(1,length(radius));
     for r = 1:length(radius)-1
@@ -122,7 +123,7 @@ for k_param = k_params
             plot(I, noisy_data(ii,:))
             title( sprintf('%s pulses with dim %d ' , data_options.type, data_options.k));
             filename = sprintf('%s_%d_sample_%d' , data_options.type, data_options.k, ii);
-            saveas(gcf, cat(2,foldername,filename), 'jpg');
+            saveas(gcf, cat(2,foldername,filename,expname), 'jpg');
         end
     end
     
@@ -265,7 +266,7 @@ for k_param = k_params
     end
     
     filename = sprintf('%s_%d_kmsvd' , data_options.type, data_options.k);
-    saveas(gcf, cat(2,foldername,filename), 'jpg');
+    saveas(gcf, cat(2,foldername,filename,expname), 'jpg');
     
     if plt_options.rmsvd
         figure;
@@ -287,10 +288,10 @@ for k_param = k_params
         ylim([0, 1.1])
         title( sprintf('Relative MSVD %s pulses with dim %d ' , data_options.type, data_options.k));
         xlabel('radius') % x-axis label
-        ylabel('$$ frac{E_{z}\left[\sigma_{i}\left(z,r\right)\right]}{E_{z}\left[\sigma_{1}\left(z,r\right)\right]} $$', 'Interpreter', 'latex') % y-axis label
+        ylabel('$$ E_{z}\left[\sigma_{i}\left(z,r\right)\right] / E_{z}\left[\sigma_{1}\left(z,r\right)\right] $$', 'Interpreter', 'latex') % y-axis label
     end
     filename = sprintf('%s_%d_rmsvd' , data_options.type, data_options.k);
-    saveas(gcf, cat(2,foldername,filename), 'jpg');
+    saveas(gcf, cat(2,foldername,filename,expname), 'jpg');
     toc
     
 end
