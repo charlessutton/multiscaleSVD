@@ -55,6 +55,25 @@ switch options.type
                 data(j,:) = data(j,:) + normpdf(I, mu_neigh(i), options.width); %neighbour pulse
             end
         end
+        
+    case 'stair'
+        % orignal pulse 
+        for i = 1:options.k
+            start_point = option.mu(i) ; 
+            start_point_idx = find(I > start_point,1);
+            end_point_idx = find(I>start_point+options.width,1);
+            data(1,start_point_idx:end_point_idx) = data(1,start_point_idx:end_point_idx) + 1;    
+        end
+        
+        for j = 2 : (options.neigh + 1)
+            mu_neigh = options.mu + options.epsilon * rand(1,options.k);
+            for i = 1:options.k
+                start_point = mu_neigh(i) ;
+                start_point_idx = find(I > start_point,1);
+                end_point_idx = find(I>start_point+options.width,1);
+                data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + 1;
+            end
+        end
     otherwise
         msg = 'this type is not available for the moment';
         error(msg)
