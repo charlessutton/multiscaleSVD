@@ -4,9 +4,9 @@
 clear all
 clc
 
-foldername = '/Users/Code/Google Drive/thesis/figures/automatic/triangle/clean/'; % mac
-%foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\clean\\'; %windows
-expname = '';
+%foldername = '/Users/Code/Google Drive/thesis/figures/automatic/triangle/clean/'; % mac
+foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\high_noise\\'; %windows
+expname = '_high_noise';
 % cat(2,'a','b'); % concat deux strings
 k_params = 1:5;
 
@@ -19,13 +19,13 @@ for k_param = k_params
     
     data_options = struct();
     data_options.type = 'triangle';
-    data_options.noise_level = 0;
+    data_options.noise_level = 1;
     data_options.k = k_param;
     data_options.n = 5000;
     data_options.D = 200;
     data_options.gain = 'off';
     data_options.circular = 'on';
-    data_options.width = 0.1;
+    data_options.width = 0.2;
     data_options.neigh = 1000;
     data_options.mu = rand(1,data_options.k);
     
@@ -295,3 +295,4 @@ for k_param = k_params
     toc
     
 end
+close all
