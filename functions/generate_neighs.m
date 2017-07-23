@@ -15,7 +15,7 @@ else
 end % this field may or may not be set manually
 
 data = zeros(1 + options.neigh, options.D);
-I = linspace(0,1,options.D);
+I = linspace(-1,1,options.D);
 
 switch options.type
     case 'gaussian'
@@ -32,6 +32,29 @@ switch options.type
             end
         end
         
+    case 'triangle'
+        % original pulse
+        for i = 1:options.k
+            middle_point = options.mu(i);
+            middle_point_idx =  find(I > middle_point,1); 
+            start_point_idx = find(I > middle_point - options.width,1);
+            end_point_idx = find(I>middle_point + options.width,1)-1;
+            data(1,start_point_idx:middle_point_idx) = data(1,start_point_idx:middle_point_idx) +  (1/options.width^2)*(I(start_point_idx:middle_point_idx) - I(start_point_idx));
+            data(1,middle_point_idx+1:end_point_idx) =  data(1,middle_point_idx+1:end_point_idx)  - (1/options.width^2)*(I(middle_point_idx+1:end_point_idx) - I(end_point_idx));
+        end
+        
+        for j = 2 : (options.neigh + 1)
+            mu_neigh = options.mu + options.epsilon * rand(1,options.k);
+            for i = 1:options.k
+                middle_point = mu_neigh(i);
+                middle_point_idx =  find(I > middle_point,1); 
+                start_point_idx = find(I > middle_point - options.width,1);
+                end_point_idx = find(I>middle_point + options.width,1)-1;
+                data(j,start_point_idx:middle_point_idx) = data(j,start_point_idx:middle_point_idx) +  (1/options.width^2)*(I(start_point_idx:middle_point_idx) - I(start_point_idx));
+                data(j,middle_point_idx+1:end_point_idx) =  data(j,middle_point_idx+1:end_point_idx)  - (1/options.width^2)*(I(middle_point_idx+1:end_point_idx) - I(end_point_idx));
+                data(j,:) = data(j,:) + normpdf(I, mu_neigh(i), options.width); %neighbour pulse
+            end
+        end
     otherwise
         msg = 'this type is not available for the moment';
         error(msg)
