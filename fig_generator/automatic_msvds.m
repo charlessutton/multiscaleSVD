@@ -5,7 +5,7 @@ clear all
 clc
 
 %foldername = '/Users/Code/Google Drive/thesis/figures/automatic/triangle/clean/'; % mac
-foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\high_noise\\'; %windows
+foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\stair\\high_noise\\'; %windows
 expname = '_high_noise';
 % cat(2,'a','b'); % concat deux strings
 k_params = 1:5;
@@ -18,7 +18,7 @@ for k_param = k_params
     %% Parameters data
     
     data_options = struct();
-    data_options.type = 'triangle';
+    data_options.type = 'stair';
     data_options.noise_level = 1;
     data_options.k = k_param;
     data_options.n = 5000;
@@ -27,7 +27,7 @@ for k_param = k_params
     data_options.circular = 'on';
     data_options.width = 0.2;
     data_options.neigh = 1000;
-    data_options.mu = rand(1,data_options.k);
+    data_options.mu = 2*rand(1,data_options.k)-1;
     
     %% Parameters algo
     radius_options = struct('it',7,'it_end',2,'it_start',4);
@@ -41,7 +41,7 @@ for k_param = k_params
     %% Generating dataset of pulses
     noisy_data = generate_data(data_options);
     
-    %% local linearity , finding "the best scale" by moving a single sample
+    %% local linearity , finding "the best scale" by exploring neighborhood (on a single sample)
     
     epsilons = 0.0001 * exp(1).^(1:11);
     
