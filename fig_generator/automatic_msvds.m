@@ -4,8 +4,8 @@
 clear all
 clc
 
-foldername = '/Users/Code/Google Drive/thesis/figures/automatic/'; % mac
-foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\clean\\'; %windows
+foldername = '/Users/Code/Google Drive/thesis/figures/automatic/triangle/clean/'; % mac
+%foldername = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\triangle\\clean\\'; %windows
 expname = '';
 % cat(2,'a','b'); % concat deux strings
 k_params = 1:5;
