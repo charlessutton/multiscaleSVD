@@ -5,9 +5,9 @@ clc
 tic
 data_options = struct();
 data_options.type = 'gaussian';
-data_options.noise_level = 0.5;
-data_options.k = 4;
-data_options.n = 12000;
+data_options.noise_level = 0;
+data_options.k = 1;
+data_options.n = 1000;
 data_options.D = 200;
 data_options.gain = 'off';
 data_options.circular = 'on';
@@ -23,7 +23,7 @@ radius_options = struct('it',7,'it_end',2,'it_start',4);
 sub_options = struct('state',true,'nb',200);
 
 %% Plotting options
-plt_options = struct('sample',true,'avg',false,'msvd',true,'rmsvd',true);
+plt_options = struct('sample',true,'avg',true,'msvd',true,'rmsvd',true);
 
 %% Generating dataset of pulses 
 noisy_data = generate_data(data_options);
@@ -102,7 +102,7 @@ avg_nb_neighbors(length(radius)) = data_options.n;
 %% some points
 if plt_options.sample
     I = linspace(0,1,data_options.D);
-    for ii=1:1
+    for ii=1:2
         figure;
         plot(I, noisy_data(ii,:))
         title( sprintf('%s pulses with dim %d ' , data_options.type, data_options.k));

@@ -9,12 +9,15 @@
 
 D = 20000;
 I = linspace(-1,1,D);
-k = 3;
+k = 4;
 sigma = 0.05;
-seeds = [];
+seeds_2 = [50, 677, 825, 1282]; % classic, collision, single peak, circularity
+seeds_3 = [1122, 1393, 2259, 1176]; % classic, two peaks, one peak ,circularity
+seeds_4 = [2995, 1911, 2141];
 
-for l = 1:5
-    seed = randi(1000);
+%for seed = seeds_2
+for l = 1:20
+    seed = randi(3000);
     rng(seed);
     mu = sort(2*rand(1,k) - 1) ;
     
@@ -41,7 +44,7 @@ for l = 1:5
     
     for i = 1:k
         plot([mu(i), mu(i)], [0,pulse(find(I>mu(i),1))], 'r' );
-        text(mu(i),-1, sprintf('\\theta_{%d}',i), 'FontSize', 14);
+        %text(mu(i),-1, sprintf('\\theta_{%d}',i), 'FontSize', 14);
         hold on 
     end
     ax = gca;
