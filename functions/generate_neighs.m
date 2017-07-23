@@ -59,10 +59,10 @@ switch options.type
     case 'stair'
         % orignal pulse 
         for i = 1:options.k
-            start_point = option.mu(i) ; 
+            start_point = options.mu(i) ; 
             start_point_idx = find(I > start_point,1);
             end_point_idx = find(I>start_point+options.width,1);
-            data(1,start_point_idx:end_point_idx) = data(1,start_point_idx:end_point_idx) + 1;    
+            data(1,start_point_idx:end_point_idx) = data(1,start_point_idx:end_point_idx) + 1/options.width;    
         end
         
         for j = 2 : (options.neigh + 1)
@@ -71,7 +71,7 @@ switch options.type
                 start_point = mu_neigh(i) ;
                 start_point_idx = find(I > start_point,1);
                 end_point_idx = find(I>start_point+options.width,1);
-                data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + 1;
+                data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + 1/options.width;
             end
         end
     otherwise
