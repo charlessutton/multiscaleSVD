@@ -28,7 +28,7 @@ if strcmpi(data_options.circular,'on')
             middle_point_idx =  find(I_extended > middle_point,1); 
             start_point_idx = find(I_extended > middle_point - data_options.width,1);
             end_point_idx = find(I_extended > middle_point + data_options.width,1)-1;
-            middle_point + data_options.width
+            middle_point + data_options.width;
             data_extended(j,start_point_idx:middle_point_idx) = data_extended(j,start_point_idx:middle_point_idx) + (gain/data_options.width^2)*(I_extended(start_point_idx:middle_point_idx) - I_extended(start_point_idx));
 
             data_extended(j,middle_point_idx+1:end_point_idx) = data_extended(j,middle_point_idx+1:end_point_idx) - (gain/data_options.width^2)*(I_extended(middle_point_idx+1:end_point_idx) - I_extended(end_point_idx));
