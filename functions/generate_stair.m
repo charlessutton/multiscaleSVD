@@ -27,7 +27,7 @@ if strcmpi(data_options.circular,'on')
             start_point = 2*rand - 1;
             start_point_idx = find(I_extended > start_point,1);
             end_point_idx = find(I_extended > start_point+data_options.width,1);
-            data_extended(j,start_point_idx:end_point_idx) = data_extended(j,start_point_idx:end_point_idx) + gain;
+            data_extended(j,start_point_idx:end_point_idx) = data_extended(j,start_point_idx:end_point_idx) + gain / data_options.width;
             
         end
     end
@@ -48,7 +48,7 @@ else
             start_point = (2-data_options.width)*rand - 1 ; 
             start_point_idx = find(I > start_point,1);
             end_point_idx = find(I>start_point+data_options.width,1);
-            data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + gain;
+            data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + gain / data_options.width;
         end
     end
     
