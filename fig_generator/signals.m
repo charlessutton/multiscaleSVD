@@ -1,5 +1,3 @@
-%% 4 dimensional gaussian pulse
-
 %% Index 
 
 % Gaussian signal
@@ -13,11 +11,11 @@ k = 4;
 sigma = 0.05;
 seeds_2 = [50, 677, 825, 1282]; % classic, collision, single peak, circularity
 seeds_3 = [1122, 1393, 2259, 1176]; % classic, two peaks, one peak ,circularity
-seeds_4 = [2995, 1911, 2141];
+seeds_4 = [2995, 1911, 2141, 695, 1019, 1127];
 
-%for seed = seeds_2
-for l = 1:20
-    seed = randi(3000);
+for seed = seeds_4
+%for l = 1:20
+%    seed = randi(3000);
     rng(seed);
     mu = sort(2*rand(1,k) - 1) ;
     
@@ -44,11 +42,12 @@ for l = 1:20
     
     for i = 1:k
         plot([mu(i), mu(i)], [0,pulse(find(I>mu(i),1))], 'r' );
-        %text(mu(i),-1, sprintf('\\theta_{%d}',i), 'FontSize', 14);
+        text(mu(i),-1, sprintf('\\theta_{%d}',i), 'FontSize', 8);
         hold on 
     end
     ax = gca;
     ax.XTick = [-1 1];
-    title(seed)
-    %title('A point of the 4 dimensional super-imposed gaussian-pulse manifold')
+    ylim([0 21]);
+    %title(seed)
+    title(sprintf('A signal from the Gaussian SIPS of dimension %d',k))
 end
