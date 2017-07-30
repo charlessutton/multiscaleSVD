@@ -29,6 +29,7 @@ switch options.type
             mu_neigh = options.mu + options.epsilon * rand(1,options.k);
             for i = 1:options.k
                 data(j,:) = data(j,:) + normpdf(I, mu_neigh(i), options.width); %neighbour pulse
+                data(j,:) = data(j,:) + options.noise_level*randn(1,options.D);
             end
         end
         

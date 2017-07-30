@@ -5,7 +5,7 @@ function [radius, spread] = best_scale(data_options, threshold)
 
 % initialization
 eps_min = 0; %var min on the parameters
-eps_max = 1; % var max on the parameters
+eps_max = 2; % var max on the parameters
 threshFlag = true;
 counter = 0;
 tolerance = 0.01; %tolerance 1%
@@ -15,7 +15,7 @@ while threshFlag  && counter < 20
     counter = counter + 1;
     
     data_options.epsilon = ( eps_min + eps_max ) / 2;
-    
+    voir_eps = ( eps_min + eps_max ) / 2
     pratio = zeros(1,data_options.try); % point ratio
     rng(seed); 
     for i = 1:data_options.try        
@@ -57,6 +57,6 @@ end
 ratio = mean(pratio);
 
 
-radius = mean(pradius);
+radius = mean(pradius); %since the noise is gaussian
 spread = std(pradius);
 end
