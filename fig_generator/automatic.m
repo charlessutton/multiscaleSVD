@@ -6,7 +6,7 @@ clc
 
 main_dir = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\';
 
-formatOut = 'yy_mm_dd';
+formatOut = 'yy_mm_dd_HH_MM';
 date_str = datestr(now,formatOut);
 
 % cat(2,main_dir,date_str,'\\'); % concat deux strings
