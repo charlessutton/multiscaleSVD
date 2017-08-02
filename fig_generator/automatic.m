@@ -4,7 +4,8 @@ clear all
 close all
 clc
 
-main_dir = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\';
+% main_dir = 'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\automatic\\';
+main_dir = '/Users/Code/Google Drive/thesis/figures/automatic/'; % mac
 
 formatOut = 'yy_mm_dd_HH_MM';
 date_str = datestr(now,formatOut);
@@ -27,7 +28,7 @@ switch type_params
         data_options.type = 'triangle';
     case 3
         data_options.type = 'stair';
-        
+end
 switch noise_params
     case 1
         data_options.noise_level = 0;
@@ -41,12 +42,12 @@ switch noise_params
     case 4
         data_options.noise_level = 1;
         noise_name = 'high_noise';
-
+end
 expname = cat(2,'_',noise_name);
         
 data_options.k = k_params;
 
-data_options.n = 5000;
+data_options.n = 10000;
 data_options.D = 200;
 data_options.gain = 'off';
 data_options.circular = 'on';
@@ -57,13 +58,14 @@ switch data_options.type
         data_options.width = 0.2;
     case 'stair'
         data_options.width = 0.1;
-        
+end  
 data_options.neigh = 1000;
 data_options.tries = 50;
 
-foldername = cat(2,main_dir,date_str,'\\',data_options.type,'\\',num2str(data_options.k),'\\',noise_name,'\\');
+% foldername = cat(2,main_dir,date_str,'\\',data_options.type,'\\',num2str(data_options.k),'\\',noise_name,'\\');
+foldername = cat(2,main_dir,date_str,'/',data_options.type,'/',num2str(data_options.k),'/',noise_name,'/');
 mkdir(foldername);
-diary(cat(2,foldername,'hello_diary.txt'));
+diary(cat(2,foldername,'console_outputs.txt'));
 diary on
 
 %% Parameters algo
