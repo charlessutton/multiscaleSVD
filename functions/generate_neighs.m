@@ -53,7 +53,7 @@ switch options.type
                 end_point_idx = find(I>middle_point + options.width,1)-1;
                 data(j,start_point_idx:middle_point_idx) = data(j,start_point_idx:middle_point_idx) +  (1/options.width^2)*(I(start_point_idx:middle_point_idx) - I(start_point_idx));
                 data(j,middle_point_idx+1:end_point_idx) =  data(j,middle_point_idx+1:end_point_idx)  - (1/options.width^2)*(I(middle_point_idx+1:end_point_idx) - I(end_point_idx));
-                data(j,:) = data(j,:) + normpdf(I, mu_neigh(i), options.width); %neighbour pulse
+                data(j,:) = data(j,:) + options.noise_level*randn(1,options.D);
             end
         end
         
@@ -73,6 +73,7 @@ switch options.type
                 start_point_idx = find(I > start_point,1);
                 end_point_idx = find(I>start_point+options.width,1);
                 data(j,start_point_idx:end_point_idx) = data(j,start_point_idx:end_point_idx) + 1/options.width;
+                data(j,:) = data(j,:) + options.noise_level*randn(1,options.D);
             end
         end
     otherwise
