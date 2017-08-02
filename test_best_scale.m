@@ -15,7 +15,7 @@ data_options.circular = 'on';
 data_options.width = 0.05;
 
 data_options.neigh = 1000;
-data_options.try = 50;
+data_options.tries = 50;
 
 
 %% local linearity , finding "the best scale" by moving a single sample
