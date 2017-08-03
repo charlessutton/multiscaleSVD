@@ -61,7 +61,7 @@ data_options.tries = 50;
 enough_neighbor_flag = true;
 compteur = 0; 
 
-while enough_neighbor_flag && compteur < 4
+while enough_neighbor_flag && compteur < 5
 compteur = compteur + 1
 noisy_data = generate_data(data_options);    
 dm = distance_matrix(noisy_data); %Compute the distance matrix
@@ -70,15 +70,17 @@ dm = distance_matrix(noisy_data); %Compute the distance matrix
 
 avg_nb_neighbor = avg_nb_per_ball(dm,relevant_scale);
 
-if avg_nb_neighbor > 20 || compteur == 4
+cell_info = {data_options.type,data_options.k,data_options.noise_level,data_options.n,round(avg_nb_neighbor)};
+T = [T;cell_info]
+%writetable(T, '/Users/Code/Google Drive/thesis/figures/n_table.txt');
+writetable(T,'C:\\Users\\sutton\\Google Drive\\Thesis\\figures\\n_table.txt');
+if avg_nb_neighbor > 20 || compteur == 5
     enough_neighbor_flag = false;
 else 
     data_options.n = data_options.n + 5000;
 end
 
-cell_info = {data_options.type,data_options.k,data_options.noise_level,data_options.n,round(avg_nb_neighbor)};
-T = [T;cell_info]
-writetable(T, '/Users/Code/Google Drive/thesis/figures/n_table.txt');
+
 
  
 end
