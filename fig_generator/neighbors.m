@@ -53,7 +53,7 @@ for seed = seeds_2
 %    
     % neigh using noise on parameter
     
-    mu_neigh = mu + 0.05 * randn(1,k);
+    mu_neigh = mu + 0.2 * randn(1,k);
     neigh_extended = zeros(1, D + 2*half_width_sample);
         
     for i = 1:k

@@ -3,7 +3,7 @@ clear all
 clc
 data_options = struct();
 data_options.type = 'gaussian';
-data_options.noise_level = 0;
+data_options.noise_level = 0.1;
 data_options.k = 3;
 data_options.n = 1000;
 data_options.D = 200;
